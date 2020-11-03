@@ -1,0 +1,2 @@
+#!/bin/bash
+./weeklymenu.py && open menu.html
