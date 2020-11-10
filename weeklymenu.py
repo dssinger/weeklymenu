@@ -4,15 +4,16 @@ from datetime import datetime, timedelta
 url = open('calendar.url', 'r').readline().strip()
 
 def fixup(s):
-  for w in ('Defrost', 'defrost', 'Marinate', 'marinate'):
+  for w in ('Defrost', 'defrost', 'Marinate', 'marinate', 'buy', 'Buy'):
     parts = s.split(f', {w} ')
     if len(parts) > 1:
-      parts[1] = '<br /><b>' + w[0].upper() + w[1:] + ' ' + parts[1] + '</b>'
+      parts[1] = '<br /><span class="special">' + w[0].upper() + w[1:] + ' ' + parts[1] + '</span>'
     s = '\n'.join(parts)
   return s
 
-now = datetime.now()
-finish = now + timedelta(10)
+# Figure out tomorrow
+tomorrow = (datetime.now() + timedelta(1)).replace(hour=0,minute=0,second=0,microsecond=0)
+finish = tomorrow + timedelta(10)
 
 outfile = open('menu.html', 'w')
 outfile.write('''
@@ -22,12 +23,13 @@ outfile.write('''
 html, body {font-family: Arial, sans-serif}
 .day {font-weight: bold; text-align: left; font-size: 120%; padding-top: 1.5em; padding-bottom: 0.5em;}
 .daypart {width: 1px; vertical-align: top;}
+.special {font-weight: bold; box-shadow: 1px 1px 2px 1px; border-radius: 30px; background-color: rgba(17, 199, 255, 0.28); padding: 1px 5px 1px 5px; margin-left: -5px;}
 </style>
 </head>
 <body>
 ''')
 
-es = events(url, fix_apple=True, start=now, end=finish)
+es = events(url, fix_apple=True, start=tomorrow, end=finish)
 es.sort()
 print(len(es), ' events')
 lastday = None
