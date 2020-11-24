@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 url = open('calendar.url', 'r').readline().strip()
 
 def fixup(s):
-  for w in ('Defrost', 'defrost', 'Marinate', 'marinate', 'buy', 'Buy'):
+  for w in ('Defrost', 'defrost', 'Marinate', 'marinate', 'buy', 'Buy', 
+            'Pick', 'pick'):
     parts = s.split(f', {w} ')
     if len(parts) > 1:
       parts[1] = '<br /><span class="special">' + w[0].upper() + w[1:] + ' ' + parts[1] + '</span>'
