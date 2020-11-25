@@ -5,11 +5,18 @@ We assume that all recipes have been exported to the grocery list so we can use 
 """
 
 import sqlite3
+import os.path
 
 class DB:
     """ Simpler interface to the Paprika database - adds convenience functions """
+    dbname = os.path.join(os.path.expanduser('~'),
+                          'Library/Group Containers/72KVKW69K8.com.hindsightlabs.paprika.mac.v3/Data/Database'
+                          '/Paprika.sqlite'
+                          )
+
     def __init__(self):
-        self.conn = sqlite3.connect('/Users/david/Library/Group Containers/72KVKW69K8.com.hindsightlabs.paprika.mac.v3/Data/Database/Paprika.sqlite')
+        # Open database in read-only mode
+        self.conn = sqlite3.connect(f'file:{self.dbname}?mode=ro', uri=True)
         self.curs = self.conn.cursor()
 
     def getRecipeByName(self, name):
@@ -39,6 +46,13 @@ class DB:
         return pantry
 
 class Pantry:
+    qualifiers = ("small", "medium", "large", "very", "fresh", "dried", "fine",
+                  "dry", "minced", "warm", "finely", "coarsely", "chopped",
+                  "freshly", "grated", "thin", "heaping", "teaspoon", "tablespoon",
+                  "and", "crushed", "roughly", "a", "optional", "garnish", "kosher",
+                  "warm", "cool", "lukewarm", "cold", "squeezed",
+                  "sprig", "cup", "cups", "teaspoons", "tablespoons",
+                  "hardware", "skillet", "flaky", "flakey", "whole", "of")
 
     def __init__(self):
       self.items = set()
@@ -48,16 +62,9 @@ class Pantry:
         # Get rid of punctuation and lowercase the string
         s = s.lower()
         s = s.translate(str.maketrans({c: None for c in ',()-'}))
-        # Remove qualifiers
-        qualifiers = ("small", "medium", "large", "very", "fresh", "dried", "fine",
-                      "dry", "minced", "warm", "finely", "coarsely", "chopped",
-                      "freshly", "grated", "thin", "heaping", "teaspoon", "tablespoon",
-                      "and", "crushed", "roughly", "a", "optional", "garnish", "kosher",
-                      "warm", "cool", "lukewarm", "cold", "squeezed",
-                      "hardware", "skillet", "flaky", "flakey", "whole", "of")
 
         s = s.split()
-        s = ' '.join([w for w in s if w not in qualifiers])
+        s = ' '.join([w for w in s if w not in self.qualifiers])
         return s.strip()
 
 
