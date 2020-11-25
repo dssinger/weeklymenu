@@ -9,7 +9,7 @@ import sqlite3
 class DB:
     """ Simpler interface to the Paprika database - adds convenience functions """
     def __init__(self):
-        self.conn = sqlite3.connect('Database/Paprika.sqlite')
+        self.conn = sqlite3.connect('/Users/david/Library/Group Containers/72KVKW69K8.com.hindsightlabs.paprika.mac.v3/Data/Database/Paprika.sqlite')
         self.curs = self.conn.cursor()
 
     def getRecipeByName(self, name):
@@ -53,6 +53,7 @@ class Pantry:
                       "dry", "minced", "warm", "finely", "coarsely", "chopped",
                       "freshly", "grated", "thin", "heaping", "teaspoon", "tablespoon",
                       "and", "crushed", "roughly", "a", "optional", "garnish", "kosher",
+                      "warm", "cool", "lukewarm", "cold", "squeezed",
                       "hardware", "skillet", "flaky", "flakey", "whole", "of")
 
         s = s.split()
@@ -66,6 +67,7 @@ class Pantry:
             self.items.add(name)
 
     def query(self, name):
+        oname = name
         name = self.canonicalize(name)
         return name in self.items
 
@@ -117,7 +119,6 @@ class Recipe:
 if __name__ == '__main__':
     db = DB()
     pantry = db.getPantry()
-    print(list(sorted(pantry.items)))
     r = db.getRecipeByName('Halibut with Rosemary Potatoes')
     for item in r.ingredients:
         print(item, pantry.query(item.ingredient))
