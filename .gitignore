@@ -1,4 +1,5 @@
 calendar.url
+.idea/*
 .cache/*
 menu.html
 /Database/
