@@ -4,13 +4,24 @@ from datetime import datetime, timedelta
 url = open('calendar.url', 'r').readline().strip()
 
 def fixup(s):
-  for w in ('Defrost', 'defrost', 'Marinate', 'marinate', 'buy', 'Buy', 
-            'Pick', 'pick'):
-    parts = s.split(f', {w} ')
-    if len(parts) > 1:
-      parts[1] = '<br /><span class="special">' + w[0].upper() + w[1:] + ' ' + parts[1] + '</span>'
-    s = '\n'.join(parts)
-  return s
+  parts = s.split(', ')
+  if len(parts) == 1:
+    return s
+  ret = []
+  part = []
+  for p in parts:
+    if p.split()[0].lower() in ('defrost', 'marinate', 'buy', 'pick', 'pickup'):
+      if part:
+        ret.append(' '.join(part))
+      part = []
+      # I solemnly swear I will not put a comma in an instruction item
+      ret.append('<br /><span class="special">' + p + '</span>')
+    else:
+      part.append(p)
+  if part:
+    ret.append(', '.join(part))
+  return '\n'.join(ret)
+
 
 # Figure out tomorrow
 tomorrow = (datetime.now() + timedelta(1)).replace(hour=0,minute=0,second=0,microsecond=0)
@@ -24,7 +35,15 @@ outfile.write('''
 html, body {font-family: Arial, sans-serif}
 .day {font-weight: bold; text-align: left; font-size: 120%; padding-top: 1.5em; padding-bottom: 0.5em;}
 .daypart {width: 1px; vertical-align: top;}
-.special {font-weight: bold; box-shadow: 1px 1px 2px 1px; border-radius: 30px; background-color: rgba(17, 199, 255, 0.28); padding: 1px 5px 1px 5px; margin-left: -5px;}
+.special {font-weight: bold; 
+          box-shadow: 1px 1px 2px 1px; 
+          border-radius: 30px; 
+          background-color: rgba(17, 199, 255, 0.28); 
+          padding: 1px 5px 1px 5px;
+          display: inline-block; 
+          margin-left: -5px;
+          margin-top: 3px;
+          margin-bottom: 3px}
 </style>
 </head>
 <body>
