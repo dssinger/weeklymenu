@@ -1,4 +1,5 @@
 calendar.url
+.DS_Store
 .idea/*
 .cache/*
 menu.html

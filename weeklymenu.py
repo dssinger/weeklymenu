@@ -5,17 +5,17 @@ url = open('calendar.url', 'r').readline().strip()
 
 def fixup(s):
   parts = s.split(', ')
-  if len(parts) == 1:
-    return s
+#  if len(parts) == 1:
+#   return s
   ret = []
   part = []
   for p in parts:
-    if p.split()[0].lower() in ('defrost', 'marinate', 'buy', 'pick', 'pickup'):
+    if p.split()[0].lower() in ('defrost', 'marinate', 'order', 'buy', 'pick', 'pickup'):
       if part:
-        ret.append(' '.join(part))
+        ret.append(' '.join(part) + '<br />')
       part = []
       # I solemnly swear I will not put a comma in an instruction item
-      ret.append('<br /><span class="special">' + p + '</span>')
+      ret.append('<span class="special">' + p + '</span>')
     else:
       part.append(p)
   if part:
@@ -27,7 +27,7 @@ def fixup(s):
 tomorrow = (datetime.now() + timedelta(1)).replace(hour=0,minute=0,second=0,microsecond=0)
 finish = tomorrow + timedelta(10)
 
-outfile = open('menu.html', 'w')
+outfile = open('menu.html', 'w', encoding='utf-16')
 outfile.write('''
 <html>
 <head>
