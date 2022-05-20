@@ -1,2 +1,2 @@
 #!/bin/bash
-./weeklymenu.py && open menu.html
+./weeklymenu.py "$@" && open menu.html

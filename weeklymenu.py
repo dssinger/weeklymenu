@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from icalevents.icalevents import events
 from datetime import datetime, timedelta
+import sys
 url = open('calendar.url', 'r').readline().strip()
 
 def fixup(s):
@@ -10,7 +11,7 @@ def fixup(s):
   ret = []
   part = []
   for p in parts:
-    if p.split()[0].lower() in ('defrost', 'marinate', 'order', 'buy', 'pick', 'pickup'):
+    if p.split()[0].lower() in ('defrost', 'marinate', 'order', 'buy', 'pick', 'pickup', 'get'):
       if part:
         ret.append(' '.join(part) + '<br />')
       part = []
@@ -23,9 +24,12 @@ def fixup(s):
   return '\n'.join(ret)
 
 
-# Figure out tomorrow
-tomorrow = (datetime.now() + timedelta(1)).replace(hour=0,minute=0,second=0,microsecond=0)
-finish = tomorrow + timedelta(10)
+# Figure out start day
+daysFromToday = 1  # Assume tomorrow
+if 'today' in ' '.join(sys.argv[1:]).lower():
+    daysFromToday = 0
+startDay = (datetime.now() + timedelta(daysFromToday)).replace(hour=0,minute=0,second=0,microsecond=0)
+finish = startDay + timedelta(10)
 
 outfile = open('menu.html', 'w', encoding='utf-16')
 outfile.write('''
@@ -49,7 +53,7 @@ html, body {font-family: Arial, sans-serif}
 <body>
 ''')
 
-es = events(url, fix_apple=True, start=tomorrow, end=finish)
+es = events(url, fix_apple=True, start=startDay, end=finish)
 es.sort()
 print(len(es), ' events')
 lastday = None
