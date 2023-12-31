@@ -38,7 +38,7 @@ outfile.write('''
 <style>
 html, body {font-family: Arial, sans-serif}
 .day {font-weight: bold; text-align: left; font-size: 120%; padding-top: 1.5em; padding-bottom: 0.5em;}
-.daypart {width: 1px; vertical-align: top;}
+.daypart {width: 5em; vertical-align: middle;}
 .special {font-weight: bold; 
           box-shadow: 1px 1px 2px 1px; 
           border-radius: 30px; 
