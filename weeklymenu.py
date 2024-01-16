@@ -11,7 +11,7 @@ def fixup(s):
   ret = []
   part = []
   for p in parts:
-    if p.split()[0].lower() in ('defrost', 'marinate', 'order', 'buy', 'pick', 'pickup', 'get'):
+    if p.split()[0].lower() in ('defrost', 'marinate', 'order', 'buy', 'pick', 'pickup', 'get', 'prepare'):
       if part:
         ret.append(' '.join(part) + '<br />')
       part = []
